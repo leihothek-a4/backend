@@ -1,2 +1,0 @@
-class QRModel:
-    photo: str
