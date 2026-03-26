@@ -12,9 +12,9 @@ if TYPE_CHECKING:
 
 class App:
     def __init__(self) -> None:
-        self.modules = ModuleManager.initialize_all(self)
         self.system_manager = SystemManager()
         self.event_manager = EventListenerManager()
+        self.modules = ModuleManager.initialize_all(self)
         self.running = True
 
     def register_system(self, system: System) -> None:

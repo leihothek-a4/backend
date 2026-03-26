@@ -10,8 +10,6 @@ if TYPE_CHECKING:
 class System(ABC):
     def __init__(self, name="System"):
         self.name = name
-        self._update_handlers: list[tuple[int, Callable]] = []
-        self._event_handlers: list[tuple[int, str, Callable]] = []
 
     @abstractmethod
     def on_attach(self):
@@ -29,6 +27,5 @@ class System(ABC):
 
     @abstractmethod
     def on_update(self):
-        """Calls all registered `@system` update methods in stage order."""
-        for _, handler in self._update_handlers:
-            handler()
+        """Called on every update"""
+        pass
