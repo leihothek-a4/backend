@@ -13,6 +13,10 @@ class SystemManager:
         self._systems.append(system)
         system.on_attach()
 
+    def start(self) -> None:
+        for system in self._systems:
+            system.on_start()
+
     def run(self) -> None:
         for system in self._systems:
             system.on_update()

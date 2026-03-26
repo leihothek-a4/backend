@@ -19,6 +19,13 @@ class System(ABC):
         pass
 
     @abstractmethod
+    def on_start(self):
+        """
+        Called after all of the modules are initialized and all on_attach are called
+        """
+        pass
+
+    @abstractmethod
     def on_detach(self):
         """
         Clean up resources whenever the system is removed

@@ -34,6 +34,8 @@ class App:
         only should be ran by entrypoint
         """
         try:
+            self.system_manager.start()
+
             while self.running:
                 self.system_manager.run()
                 self.event_manager.dispatch_events()
