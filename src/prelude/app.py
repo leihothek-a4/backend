@@ -12,9 +12,9 @@ if TYPE_CHECKING:
 
 class App:
     def __init__(self) -> None:
-        self.modules = ModuleManager.initialize_all(self)
         self.system_manager = SystemManager()
         self.event_manager = EventListenerManager()
+        self.modules = ModuleManager.initialize_all(self)
         self.running = True
 
     def register_system(self, system: System) -> None:
@@ -34,6 +34,8 @@ class App:
         only should be ran by entrypoint
         """
         try:
+            self.system_manager.start()
+
             while self.running:
                 self.system_manager.run()
                 self.event_manager.dispatch_events()
