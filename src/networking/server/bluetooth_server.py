@@ -1,4 +1,5 @@
 import threading
+from abc import ABCMeta
 
 import dbus
 import dbus.service
@@ -12,7 +13,7 @@ BUS_NAME = "com.bluetooth.Server"
 OBJECT_PATH = "/com/bluetooth/Server"
 INTERFACE = "com.bluetooth.Server"
 
-WEBHOOK_URL = "http://128.140.115.158:5678/webhook-test/5ff59de5-0715-4dcc-af17-7f9b96b44277"
+WEBHOOK_URL = "https://ntfy.sh/hanzeleihothek"
 
 BLUEZ_SERVICE = "org.bluez"
 BLUEZ_ADAPTER_IFACE = "org.bluez.Adapter1"
@@ -21,7 +22,11 @@ OBJECT_MANAGER_IFACE = "org.freedesktop.DBus.ObjectManager"
 PROPERTIES_IFACE = "org.freedesktop.DBus.Properties"
 
 
-class BluetoothServer(dbus.service.Object, System):
+class _BluetoothServerMeta(type(dbus.service.Object), ABCMeta):
+    pass
+
+
+class BluetoothServer(dbus.service.Object, System, metaclass=_BluetoothServerMeta):
     def __init__(self) -> None:
         bus = DBusContextManager.get_bus()
         dbus.service.Object.__init__(self, bus, OBJECT_PATH)
@@ -106,7 +111,9 @@ class BluetoothServer(dbus.service.Object, System):
         for path, ifaces in manager.GetManagedObjects().items():
             if BLUEZ_DEVICE_IFACE in ifaces:
                 self._select_device(str(path), ifaces[BLUEZ_DEVICE_IFACE])
-                if self._device_path and bool(ifaces[BLUEZ_DEVICE_IFACE].get("Paired", False)):
+                if self._device_path and bool(
+                    ifaces[BLUEZ_DEVICE_IFACE].get("Paired", False)
+                ):
                     break
 
     def _on_interfaces_added(self, path: str, interfaces: dict) -> None:
@@ -180,8 +187,12 @@ class BluetoothServer(dbus.service.Object, System):
         return f"{self._device_address} — {state}"
 
     @dbus.service.method(INTERFACE, in_signature="sss", out_signature="")
-    def ReportNetworkDisconnect(self, prev_state: str, new_state: str, reason: str) -> None:
-        logger.warning(f"[client] Network disconnect: {prev_state} → {new_state}  ({reason})")
+    def ReportNetworkDisconnect(
+        self, prev_state: str, new_state: str, reason: str
+    ) -> None:
+        logger.warning(
+            f"[client] Network disconnect: {prev_state} → {new_state}  ({reason})"
+        )
         self.NetworkDisconnected(prev_state, new_state, reason)
         threading.Thread(
             target=self._post_disconnect_webhook,
@@ -189,11 +200,17 @@ class BluetoothServer(dbus.service.Object, System):
             daemon=True,
         ).start()
 
-    def _post_disconnect_webhook(self, prev_state: str, new_state: str, reason: str) -> None:
+    def _post_disconnect_webhook(
+        self, prev_state: str, new_state: str, reason: str
+    ) -> None:
         try:
             response = requests.post(
                 WEBHOOK_URL,
-                json={"prev_state": prev_state, "new_state": new_state, "reason": reason},
+                json={
+                    "prev_state": prev_state,
+                    "new_state": new_state,
+                    "reason": reason,
+                },
                 timeout=10,
             )
             logger.debug(f"Webhook response: {response.status_code}")
@@ -201,13 +218,17 @@ class BluetoothServer(dbus.service.Object, System):
             logger.error(f"Webhook POST failed: {e}")
 
     @dbus.service.signal(INTERFACE, signature="ss")
-    def DeviceDiscovered(self, address: str, name: str): pass
+    def DeviceDiscovered(self, address: str, name: str):
+        pass
 
     @dbus.service.signal(INTERFACE, signature="s")
-    def DeviceConnected(self, address: str): pass
+    def DeviceConnected(self, address: str):
+        pass
 
     @dbus.service.signal(INTERFACE, signature="s")
-    def DeviceDisconnected(self, address: str): pass
+    def DeviceDisconnected(self, address: str):
+        pass
 
     @dbus.service.signal(INTERFACE, signature="sss")
-    def NetworkDisconnected(self, prev_state: str, new_state: str, reason: str): pass
+    def NetworkDisconnected(self, prev_state: str, new_state: str, reason: str):
+        pass

@@ -15,6 +15,8 @@ class DBusContextManager:
 
     @classmethod
     def init(cls) -> None:
+        if cls._bus is not None:
+            return
         DBusGMainLoop(set_as_default=True)
         cls._bus = dbus.SystemBus()
         cls._context = GLib.MainContext.default()
@@ -53,7 +55,6 @@ class DBusContextManager:
         return cls._context
 
     @classmethod
-    @logger.catch
     def get_bus(cls) -> dbus.SystemBus:
         if cls._bus is None:
             logger.critical("DBusContextManager has not been initialized yet")
