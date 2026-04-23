@@ -1,0 +1,386 @@
+{
+    "NMDeviceState": [
+        {
+            "name": "NM_DEVICE_STATE_UNKNOWN",
+            "value": 0,
+            "description": "the device's state is unknown"
+        },
+        {
+            "name": "NM_DEVICE_STATE_UNMANAGED",
+            "value": 10,
+            "description": "the device is recognized, but not managed by NetworkManager"
+        },
+        {
+            "name": "NM_DEVICE_STATE_UNAVAILABLE",
+            "value": 20,
+            "description": "the device is managed by NetworkManager, but is not available for use. Reasons may include the wireless switched off, missing firmware, no ethernet carrier, missing supplicant or modem manager, etc."
+        },
+        {
+            "name": "NM_DEVICE_STATE_DISCONNECTED",
+            "value": 30,
+            "description": "the device can be activated, but is currently idle and not connected to a network."
+        },
+        {
+            "name": "NM_DEVICE_STATE_PREPARE",
+            "value": 40,
+            "description": "the device is preparing the connection to the network. This may include operations like changing the MAC address, setting physical link properties, and anything else required to connect to the requested network."
+        },
+        {
+            "name": "NM_DEVICE_STATE_CONFIG",
+            "value": 50,
+            "description": "the device is connecting to the requested network. This may include operations like associating with the WiFi AP, dialing the modem, connecting to the remote Bluetooth device, etc."
+        },
+        {
+            "name": "NM_DEVICE_STATE_NEED_AUTH",
+            "value": 60,
+            "description": "the device requires more information to continue connecting to the requested network. This includes secrets like WiFi passphrases, login passwords, PIN codes, etc."
+        },
+        {
+            "name": "NM_DEVICE_STATE_IP_CONFIG",
+            "value": 70,
+            "description": "the device is requesting IPv4 and/or IPv6 addresses and routing information from the network."
+        },
+        {
+            "name": "NM_DEVICE_STATE_IP_CHECK",
+            "value": 80,
+            "description": "the device is checking whether further action is required for the requested network connection. This may include checking whether only local network access is available, whether a captive portal is blocking access to the Internet, etc."
+        },
+        {
+            "name": "NM_DEVICE_STATE_SECONDARIES",
+            "value": 90,
+            "description": "the device is waiting for a secondary connection (like a VPN) which must activated before the device can be activated"
+        },
+        {
+            "name": "NM_DEVICE_STATE_ACTIVATED",
+            "value": 100,
+            "description": "the device has a network connection, either local or global."
+        },
+        {
+            "name": "NM_DEVICE_STATE_DEACTIVATING",
+            "value": 110,
+            "description": "a disconnection from the current network connection was requested, and the device is cleaning up resources used for that connection. The network connection may still be valid."
+        },
+        {
+            "name": "NM_DEVICE_STATE_FAILED",
+            "value": 120,
+            "description": "the device failed to connect to the requested network and is cleaning up the connection request"
+        }
+    ],
+    "NMDeviceStateReason": [
+        {
+            "name": "NM_DEVICE_STATE_REASON_NONE",
+            "value": 0,
+            "description": "No reason given"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_UNKNOWN",
+            "value": 1,
+            "description": "Unknown error"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_NOW_MANAGED",
+            "value": 2,
+            "description": "Device is now managed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_NOW_UNMANAGED",
+            "value": 3,
+            "description": "Device is now unmanaged"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_CONFIG_FAILED",
+            "value": 4,
+            "description": "The device could not be readied for configuration"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_IP_CONFIG_UNAVAILABLE",
+            "value": 5,
+            "description": "IP configuration could not be reserved (no available address, timeout, etc)"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_IP_CONFIG_EXPIRED",
+            "value": 6,
+            "description": "The IP config is no longer valid"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_NO_SECRETS",
+            "value": 7,
+            "description": "Secrets were required, but not provided"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_SUPPLICANT_DISCONNECT",
+            "value": 8,
+            "description": "802.1x supplicant disconnected"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_SUPPLICANT_CONFIG_FAILED",
+            "value": 9,
+            "description": "802.1x supplicant configuration failed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_SUPPLICANT_FAILED",
+            "value": 10,
+            "description": "802.1x supplicant failed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_SUPPLICANT_TIMEOUT",
+            "value": 11,
+            "description": "802.1x supplicant took too long to authenticate"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_PPP_START_FAILED",
+            "value": 12,
+            "description": "PPP service failed to start"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_PPP_DISCONNECT",
+            "value": 13,
+            "description": "PPP service disconnected"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_PPP_FAILED",
+            "value": 14,
+            "description": "PPP failed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_DHCP_START_FAILED",
+            "value": 15,
+            "description": "DHCP client failed to start"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_DHCP_ERROR",
+            "value": 16,
+            "description": "DHCP client error"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_DHCP_FAILED",
+            "value": 17,
+            "description": "DHCP client failed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_SHARED_START_FAILED",
+            "value": 18,
+            "description": "Shared connection service failed to start"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_SHARED_FAILED",
+            "value": 19,
+            "description": "Shared connection service failed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_AUTOIP_START_FAILED",
+            "value": 20,
+            "description": "AutoIP service failed to start"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_AUTOIP_ERROR",
+            "value": 21,
+            "description": "AutoIP service error"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_AUTOIP_FAILED",
+            "value": 22,
+            "description": "AutoIP service failed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_MODEM_BUSY",
+            "value": 23,
+            "description": "The line is busy"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_MODEM_NO_DIAL_TONE",
+            "value": 24,
+            "description": "No dial tone"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_MODEM_NO_CARRIER",
+            "value": 25,
+            "description": "No carrier could be established"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_MODEM_DIAL_TIMEOUT",
+            "value": 26,
+            "description": "The dialing request timed out"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_MODEM_DIAL_FAILED",
+            "value": 27,
+            "description": "The dialing attempt failed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_MODEM_INIT_FAILED",
+            "value": 28,
+            "description": "Modem initialization failed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_GSM_APN_FAILED",
+            "value": 29,
+            "description": "Failed to select the specified APN"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_GSM_REGISTRATION_NOT_SEARCHING",
+            "value": 30,
+            "description": "Not searching for networks"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_GSM_REGISTRATION_DENIED",
+            "value": 31,
+            "description": "Network registration denied"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_GSM_REGISTRATION_TIMEOUT",
+            "value": 32,
+            "description": "Network registration timed out"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_GSM_REGISTRATION_FAILED",
+            "value": 33,
+            "description": "Failed to register with the requested network"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_GSM_PIN_CHECK_FAILED",
+            "value": 34,
+            "description": "PIN check failed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_FIRMWARE_MISSING",
+            "value": 35,
+            "description": "Necessary firmware for the device may be missing"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_REMOVED",
+            "value": 36,
+            "description": "The device was removed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_SLEEPING",
+            "value": 37,
+            "description": "NetworkManager went to sleep"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_CONNECTION_REMOVED",
+            "value": 38,
+            "description": "The device's active connection disappeared"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_USER_REQUESTED",
+            "value": 39,
+            "description": "Device disconnected by user or client"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_CARRIER",
+            "value": 40,
+            "description": "Carrier/link changed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_CONNECTION_ASSUMED",
+            "value": 41,
+            "description": "The device's existing connection was assumed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_SUPPLICANT_AVAILABLE",
+            "value": 42,
+            "description": "The supplicant is now available"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_MODEM_NOT_FOUND",
+            "value": 43,
+            "description": "The modem could not be found"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_BT_FAILED",
+            "value": 44,
+            "description": "The Bluetooth connection failed or timed out"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_GSM_SIM_NOT_INSERTED",
+            "value": 45,
+            "description": "GSM Modem's SIM Card not inserted"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_GSM_SIM_PIN_REQUIRED",
+            "value": 46,
+            "description": "GSM Modem's SIM Pin required"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_GSM_SIM_PUK_REQUIRED",
+            "value": 47,
+            "description": "GSM Modem's SIM Puk required"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_GSM_SIM_WRONG",
+            "value": 48,
+            "description": "GSM Modem's SIM wrong"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_INFINIBAND_MODE",
+            "value": 49,
+            "description": "InfiniBand device does not support connected mode"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_DEPENDENCY_FAILED",
+            "value": 50,
+            "description": "A dependency of the connection failed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_BR2684_FAILED",
+            "value": 51,
+            "description": "Problem with the RFC 2684 Ethernet over ADSL bridge"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_MODEM_MANAGER_UNAVAILABLE",
+            "value": 52,
+            "description": "ModemManager not running"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_SSID_NOT_FOUND",
+            "value": 53,
+            "description": "The WiFi network could not be found"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_SECONDARY_CONNECTION_FAILED",
+            "value": 54,
+            "description": "A secondary connection of the base connection failed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_DCB_FCOE_FAILED",
+            "value": 55,
+            "description": "DCB or FCoE setup failed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_TEAMD_CONTROL_FAILED",
+            "value": 56,
+            "description": "teamd control failed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_MODEM_FAILED",
+            "value": 57,
+            "description": "Modem failed or no longer available"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_MODEM_AVAILABLE",
+            "value": 58,
+            "description": "Modem now ready and available"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_SIM_PIN_INCORRECT",
+            "value": 59,
+            "description": "SIM PIN was incorrect"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_NEW_ACTIVATION",
+            "value": 60,
+            "description": "New connection activation was enqueued"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_PARENT_CHANGED",
+            "value": 61,
+            "description": "the device's parent changed"
+        },
+        {
+            "name": "NM_DEVICE_STATE_REASON_PARENT_MANAGED_CHANGED",
+            "value": 62,
+            "description": "the device parent's management changed"
+        }
+    ]
+}
