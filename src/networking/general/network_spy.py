@@ -28,18 +28,23 @@ class NetworkSpy(System):
 
         logger.info(
             "prev_state: {0}, new_state: {1}, reason: {2}".format(
-                explained_prev_state.name,  # type: ignore
-                explained_new_state.name,  # type: ignore
+                explained_prev_state.description,  # type: ignore
+                explained_new_state.description,  # type: ignore
                 explained_reason.description,  # type: ignore
             )
         )
 
-        if explained_new_state and explained_new_state.name in _DISCONNECT_STATES:
+        # if explained_new_state and explained_new_state.name in _DISCONNECT_STATES:
+        if explained_new_state:
             self._app.queue_event(
                 NetworkEvent(
-                    prev_state=explained_prev_state.name if explained_prev_state else str(prev_state),  # type: ignore
-                    new_state=explained_new_state.name,
-                    reason=explained_reason.description if explained_reason else str(reason),  # type: ignore
+                    prev_state=explained_prev_state.description
+                    if explained_prev_state
+                    else str(prev_state),  # type: ignore
+                    new_state=explained_new_state.description,
+                    reason=explained_reason.description
+                    if explained_reason
+                    else str(reason),  # type: ignore
                 )
             )
 

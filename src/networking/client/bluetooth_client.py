@@ -1,6 +1,8 @@
+import threading
 import time
 
 import dbus
+import requests
 from loguru import logger
 
 from ...prelude.events import EventListener
@@ -11,6 +13,8 @@ from ..events.network_event import NetworkEvent
 BUS_NAME = "com.bluetooth.Server"
 OBJECT_PATH = "/com/bluetooth/Server"
 INTERFACE = "com.bluetooth.Server"
+
+WEBHOOK_URL = "https://ntfy.sh/hanzeleihothek"
 
 RETRY_INTERVAL = 5.0
 
@@ -49,34 +53,66 @@ class BluetoothClient(System, EventListener):
         self._next_attempt_at = time.monotonic() + RETRY_INTERVAL
 
     def on_event(self, event: NetworkEvent) -> None:
+        threading.Thread(
+            target=self._post_disconnect_webhook,
+            args=(event.prev_state, event.new_state, event.reason),
+            daemon=True,
+        ).start()
         if self._server is None:
-            logger.warning("Network disconnect — server unreachable, queuing event for later.")
+            logger.warning(
+                "Network disconnect — server unreachable, queuing event for later."
+            )
             self._pending_events.append(event)
             return
         self._send_event(event)
+
+    def _post_disconnect_webhook(
+        self, prev_state: str, new_state: str, reason: str
+    ) -> None:
+        try:
+            response = requests.post(
+                WEBHOOK_URL,
+                json={
+                    "prev_state": prev_state,
+                    "new_state": new_state,
+                    "reason": reason,
+                },
+                timeout=10,
+            )
+            logger.debug(f"Webhook response: {response.status_code}")
+        except requests.RequestException as e:
+            logger.error(f"Webhook POST failed: {e}")
 
     def _send_event(self, event: NetworkEvent) -> None:
         try:
             self._server.ReportNetworkDisconnect(
                 event.prev_state, event.new_state, event.reason
             )
-            logger.info(f"Network disconnect forwarded to server: {event.prev_state} → {event.new_state}")
+            logger.info(
+                f"Network disconnect forwarded to server: {event.prev_state} → {event.new_state}"
+            )
         except dbus.DBusException as e:
-            logger.error(f"Failed to report network disconnect: {e} — queuing event, dropping proxy.")
+            logger.error(
+                f"Failed to report network disconnect: {e} — queuing event, dropping proxy."
+            )
             self._pending_events.append(event)
             self._server = None
 
     def _flush_pending_events(self) -> None:
         if not self._pending_events:
             return
-        logger.info(f"Server reconnected — flushing {len(self._pending_events)} pending event(s).")
+        logger.info(
+            f"Server reconnected — flushing {len(self._pending_events)} pending event(s)."
+        )
         unsent: list[NetworkEvent] = []
         for event in self._pending_events:
             try:
                 self._server.ReportNetworkDisconnect(
                     event.prev_state, event.new_state, event.reason
                 )
-                logger.info(f"Flushed pending disconnect: {event.prev_state} → {event.new_state}")
+                logger.info(
+                    f"Flushed pending disconnect: {event.prev_state} → {event.new_state}"
+                )
             except dbus.DBusException as e:
                 logger.error(f"Flush failed: {e} — dropping proxy.")
                 unsent.append(event)
@@ -109,7 +145,9 @@ class BluetoothClient(System, EventListener):
             logger.info(f"Device [{address}] not connected — requesting connection ...")
             success = bool(self._server.Connect())
             if not success:
-                logger.warning(f"Connection attempt failed, retrying in {RETRY_INTERVAL}s.")
+                logger.warning(
+                    f"Connection attempt failed, retrying in {RETRY_INTERVAL}s."
+                )
 
         except dbus.DBusException as e:
             logger.error(f"DBus error: {e} — dropping server proxy, will re-acquire.")
